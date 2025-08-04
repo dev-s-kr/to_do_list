@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if request.user == todo.username or request.user.is_superuser %}
+    <div class="mt-3 d-flex justify-content-between">
+      <h1>{{ todo.title }}</h1>
+      <div>
+        <a class="btn btn-warning" href="{% url 'ToDoList:update' todo.pk %}">수정</a>
+        <form id="delete_form" action="{% url 'ToDoList:delete' todo.pk %}" method="POST" style="display: inline">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="button" id="delete_btn">삭제</button>
+        </form>
+      </div>
+    </div>
+    <div style="text-align: right">
+      작성자 : {{ todo.username }}
+    </div>
+    <div style="text-align: right">
+      완료여부 : [ {{ todo.is_completed|yesno:"완료, 미완료" }} ]
+    </div>
+    <div style="text-align: right">
+      시작일 : {{ todo.start_date }}
+    </div>
+    <div style="text-align: right">
+      종료일 : {{ todo.end_date }}
+    </div>
+    <hr>
+    <p>{{ todo.description | safe }}</p>
+    <hr>
+    {% if request.user.is_authenticated %}
+      <form method="post" action="{% url "ToDoList:comment_create" todo.pk %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <div class="text-end">
+          <button class="btn btn-primary">작성</button>
+        </div>
+      </form>
+    {% endif %}
+    <div class="mb-2" id="comment_wrapper">
+      {% for comment in object_list %}
+        <div class="border-bottom">
+          {{ comment.content }}
+          <p class="text-end">
+            <small>{{ comment.created_at | date:"Y-m-d H:i" }} | {{ comment.username.username }}</small>
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>접근 권한이 없습니다.</p>
+  {% endif %}
+  <hr>
+  {% include "pagination.html" with fragment="comment_wrapper" %}
+  <a class="btn btn-info" href="{% url 'ToDoList:list' %}">목록</a>
+{% endblock %}
+
+{% block js %}
+  <script>
+      document.querySelector("#delete_btn").addEventListener("click", function () {
+          if (confirm("삭제하시겠습니까?")) {
+              document.querySelector("#delete_form").submit();
+          }
+      })
+  </script>
+{% endblock %}
