@@ -14,6 +14,9 @@
     <div style="text-align: right">
       작성자 : {{ todo.username }}
     </div>
+    {% if todo.image %}
+      <img src="{{ todo.image.url }}" alt="" class="w-100">
+    {% endif %}
     <div style="text-align: right">
       완료여부 : [ {{ todo.is_completed|yesno:"완료, 미완료" }} ]
     </div>

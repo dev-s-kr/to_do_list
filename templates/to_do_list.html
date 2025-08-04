@@ -5,34 +5,46 @@
       {% if request.user.is_authenticated %}
         <h1 class="d-inline">{{ request.user.username }}님의 할 일 목록</h1>
         <a class="float-end mt-2 btn btn-primary" href="{% url 'ToDoList:create' %}">생성</a>
-        </div>
-        <hr>
-        {% for ToDoList in object_list %}
-          {#                {% if ToDoList.username == request.user or request.user.is_superuser %}#}
-          <div class="my-2">
-            <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-               href="{% url 'ToDoList:info' ToDoList.pk %}">
-              {{ ToDoList.title }}
-            </a>
-            <small>
-              [ {{ ToDoList.is_completed|yesno:"완료, 미완료" }} ]
-              [ 작성자 : {{ ToDoList.username }} ]
-              [ 종료일 : {{ ToDoList.end_date | date:"Y-m-d" }} ]
-              ( {{ ToDoList.id }} )
-            </small>
-          </div>
-          {#                {% endif %}#}
-        {% endfor %}
-
-        <form method="get" class="my-3 d-flex">
-          <input class="form-control-sm" name="q" type="text" placeholder="검색어를 입력하세요."
-                 value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
-          <button class="btn btn-info ms-2">검색</button>
-        </form>
-
-        {% include "pagination.html" %}
       {% else %}
         <h1>회원가입 또는 로그인을 진행해주세요.</h1>
       {% endif %}
+    </div>
+    <hr>
+    {% if request.user.is_authenticated %}
+      {% for todo in object_list %}
+        {#                {% if ToDoList.username == request.user or request.user.is_superuser %}#}
+        <div class="my-2">
+          <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+             href="{% url 'ToDoList:info' todo.pk %}">
+            {% if todo.get_thumbnail_image_url %}
+              <img src="{{ todo.get_thumbnail_image_url }}" alt="" class="col-2">
+            {% endif %}
+{#            {% if todo.thumbnail %}#}
+{#              <img src="{{ todo.thumbnail.url }}" alt="" class="col-2">#}
+{#            {% elif ToDoList.image %}#}
+{#              <img src="{{ todo.image.url }}" alt="" class="col-2">#}
+{#            {% endif %}#}
+            {{ todo.title }}
+          </a>
+          <small>
+            [ {{ todo.is_completed|yesno:"완료, 미완료" }} ]
+            [ 작성자 : {{ todo.username }} ]
+            [ 종료일 : {{ todo.end_date | date:"Y-m-d" }} ]
+            ( {{ todo.id }} )
+          </small>
+        </div>
+        {#                {% endif %}#}
+      {% endfor %}
+
+      <form method="get" class="my-3 d-flex">
+        <input class="form-control-sm" name="q" type="text" placeholder="검색어를 입력하세요."
+               value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        <button class="btn btn-info ms-2">검색</button>
+      </form>
+
+      {% include "pagination.html" %}
+    {% else %}
+      <h1>회원가입 또는 로그인을 진행해주세요.</h1>
+    {% endif %}
   </div>
 {% endblock %}

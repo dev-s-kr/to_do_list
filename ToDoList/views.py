@@ -100,6 +100,10 @@ class ToDoUpdate(LoginRequiredMixin, UpdateView):
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(username=self.request.user)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

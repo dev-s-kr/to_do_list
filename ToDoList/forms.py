@@ -1,11 +1,13 @@
 from ToDoList.models import ToDoList, Comment
 from django import forms
+from django_summernote.widgets import SummernoteWidget
 
 class ToDoForm(forms.ModelForm):
     class Meta:
         model = ToDoList
-        fields = ("title", "description", "start_date", "end_date", "is_completed")
+        fields = ("title", "image", "description", "start_date", "end_date", "is_completed")
         widgets = {
+            "description": SummernoteWidget(),
             "start_date": forms.DateInput(
                 attrs={"type": "date"},
                 format="%Y-%m-%d"
