@@ -1,19 +1,13 @@
-[tool.poetry]
-name = "chapter-02"
+[project]
+name = "todolist"
 version = "0.1.0"
-description = ""
-authors = ["meoyoug <eodyd426@gmail.com>"]
+description = "Add your description here"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-django = "^5.0.7"
-django-extensions = "^3.2.3"
-django-summernote = "^0.8.20.0"
-pillow = "^10.4.0"
-django-cleanup = "^8.1.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.2.4",
+    "django-cleanup>=9.0.0",
+    "django-extensions>=4.1",
+    "django-summernote>=0.8.20.0",
+    "pillow>=11.3.0",
+]
